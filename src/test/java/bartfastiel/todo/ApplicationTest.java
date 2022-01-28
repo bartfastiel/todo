@@ -6,8 +6,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -18,9 +17,13 @@ public class ApplicationTest {
     private MockMvc mvc;
 
     @Test
-    public void testMethod() throws Exception {
-        mvc.perform(get("/"))
-                .andDo(print())
-                .andExpect(status().isNotFound());
+    public void expectStatusCreated_whenSendingTodoItem() throws Exception {
+        mvc.perform(put("/todos").content("""
+                        {
+                            "title": "some title",
+                            "status": "open"
+                        }
+                        """))
+                .andExpect(status().isCreated());
     }
 }
