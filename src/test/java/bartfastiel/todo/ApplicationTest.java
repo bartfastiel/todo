@@ -9,7 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -21,7 +21,7 @@ public class ApplicationTest {
 
     @Test
     public void expectStatusCreated_whenSendingTodoItem() throws Exception {
-        mvc.perform(put("/todos")
+        mvc.perform(post("/todos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -34,7 +34,7 @@ public class ApplicationTest {
 
     @Test
     public void expectStatusBadRequest_whenSendingInvalidStatus() throws Exception {
-        mvc.perform(put("/todos")
+        mvc.perform(post("/todos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
