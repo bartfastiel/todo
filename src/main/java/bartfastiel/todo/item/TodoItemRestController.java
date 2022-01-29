@@ -7,19 +7,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 class TodoItemRestController {
 
-    private final List<TodoItem> items = new ArrayList<>();
+    private final TodoItemRepository repo;
+
+    TodoItemRestController(
+            TodoItemRepository repo
+    ) {
+        this.repo = repo;
+    }
 
     @PostMapping("/todos")
     ResponseEntity<Void> newTodoItem(
             @RequestBody TodoItem item
     ) {
-        items.add(item);
+        repo.save(item);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();
@@ -27,6 +32,6 @@ class TodoItemRestController {
 
     @GetMapping("/todos")
     List<TodoItem> fetchTodoItems() {
-        return items;
+        return repo.findAll();
     }
 }
