@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
@@ -19,6 +20,7 @@ public class ApplicationTest {
     @Autowired
     private MockMvc mvc;
 
+    @DirtiesContext
     @Test
     public void expectStatusCreated_whenSendingTodoItem() throws Exception {
         mvc.perform(post("/todos")
@@ -32,6 +34,7 @@ public class ApplicationTest {
                 .andExpect(status().isCreated());
     }
 
+    @DirtiesContext
     @Test
     public void expectStatusBadRequest_whenSendingInvalidStatus() throws Exception {
         mvc.perform(post("/todos")
@@ -42,6 +45,31 @@ public class ApplicationTest {
                                 }
                                 """))
                 .andExpect(status().isBadRequest());
+    }
+
+    @DirtiesContext
+    @Test
+    public void expectSingleItemResponse_whenStoringItemThenQuerying() throws Exception {
+        mvc.perform(post("/todos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "title": "some title",
+                            "status": "open"
+                        }
+                        """));
+
+        mvc.perform(get("/todos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(content().json("""
+                        [
+                            {
+                                    "title": "some title",
+                                    "status": "open"
+                            }
+                        ]
+                        """));
     }
 
     @Test
