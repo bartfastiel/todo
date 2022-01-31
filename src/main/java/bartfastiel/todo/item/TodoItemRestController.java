@@ -16,6 +16,7 @@ import java.util.List;
 @RequestMapping("/todos")
 class TodoItemRestController {
 
+    public static final String PATH_TO_ITEM_KEY = "/{key}";
     private final TodoItemRepository repo;
 
     TodoItemRestController(
@@ -32,20 +33,20 @@ class TodoItemRestController {
             headers = @Header(name = HttpHeaders.LOCATION, description = "URL of the newly created resource", schema = @Schema(type = "string")),
             content = @Content(schema = @Schema(hidden = true))
     )
-    ResponseEntity<?> newTodoItem(
+    ResponseEntity<Void> newTodoItem(
             @RequestBody NewTodoItem item
     ) {
         var savedItem = repo.save(item.withNewGeneratedKey());
         return ResponseEntity
                 .created(ServletUriComponentsBuilder
                         .fromCurrentRequest()
-                        .path("/{id}")
+                        .path(PATH_TO_ITEM_KEY)
                         .buildAndExpand(savedItem.key())
                         .toUri())
                 .build();
     }
 
-    @PutMapping(path = "/{key}")
+    @PutMapping(path = PATH_TO_ITEM_KEY)
     @Operation(summary = "Add or update a todo item", tags = {"todos"})
     @ApiResponse(
             responseCode = "201",
@@ -58,7 +59,7 @@ class TodoItemRestController {
             description = "The resource already existed, and has successfully been updated.",
             content = @Content(schema = @Schema(hidden = true))
     )
-    ResponseEntity<?> updateTodoItem(
+    ResponseEntity<Void> updateTodoItem(
             @PathVariable String key,
             @RequestBody NewTodoItem item
     ) {
