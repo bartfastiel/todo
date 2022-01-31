@@ -1,15 +1,13 @@
 package bartfastiel.todo.item;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/todos")
 class TodoItemRestController {
 
     private final TodoItemRepository repo;
@@ -20,7 +18,7 @@ class TodoItemRestController {
         this.repo = repo;
     }
 
-    @PostMapping("/todos")
+    @PostMapping
     ResponseEntity<?> newTodoItem(
             @RequestBody NewTodoItem item
     ) {
@@ -34,7 +32,18 @@ class TodoItemRestController {
                 .build();
     }
 
-    @GetMapping("/todos")
+    @PutMapping(path = "/{key}")
+    ResponseEntity<?> updateTodoItem(
+            @PathVariable String key,
+            @RequestBody NewTodoItem item
+    ) {
+        repo.save(item.withKey(key));
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
+    @GetMapping
     List<TodoItem> fetchTodoItems() {
         return repo.findAll();
     }

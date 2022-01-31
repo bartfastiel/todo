@@ -13,4 +13,12 @@ record NewTodoItem(
                 status()
         );
     }
+
+    public TodoItem withKey(String key) {
+        return new TodoItem(
+                key,
+                title(),
+                status()
+        );
+    }
 }
