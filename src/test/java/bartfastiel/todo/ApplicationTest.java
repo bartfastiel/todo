@@ -9,10 +9,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static java.util.Objects.requireNonNull;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.matchesRegex;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -85,6 +85,45 @@ public class ApplicationTest {
                             {
                                     "title": "some title",
                                     "status": "open"
+                            }
+                        ]
+                        """));
+    }
+
+    @DirtiesContext
+    @Test
+    public void expectUpdatedResponse_whenInsertingThenUpdatingItem() throws Exception {
+        var location = mvc.perform(post("/todos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "title": "some title",
+                                    "status": "open"
+                                }
+                                """))
+                .andReturn()
+                .getResponse()
+                .getHeader(HttpHeaders.LOCATION);
+
+        requireNonNull(location);
+        mvc.perform(put(location)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "title": "updated title",
+                                    "status": "done"
+                                }
+                                """))
+                .andExpect(status().isOk());
+
+        mvc.perform(get("/todos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(content().json("""
+                        [
+                            {
+                                    "title": "updated title",
+                                    "status": "done"
                             }
                         ]
                         """));
