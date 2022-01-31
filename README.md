@@ -12,3 +12,8 @@ Start the application with the following settings to connect to a remote mongo d
 ```
 
 Or store the settings in `src/main/resources/application-secret.properties` for local testing.
+
+## Clean code
+
+![build](https://github.com/bartfastiel/todo/actions/workflows/maven.yml/badge.svg)
+
