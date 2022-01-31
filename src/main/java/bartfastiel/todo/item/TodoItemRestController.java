@@ -37,10 +37,20 @@ class TodoItemRestController {
             @PathVariable String key,
             @RequestBody NewTodoItem item
     ) {
+        var existed = repo.existsById(key);
         repo.save(item.withKey(key));
-        return ResponseEntity
-                .ok()
-                .build();
+        if (existed) {
+            return ResponseEntity
+                    .ok()
+                    .build();
+        } else {
+            return ResponseEntity
+                    .created(ServletUriComponentsBuilder
+                            .fromCurrentRequest()
+                            .build()
+                            .toUri())
+                    .build();
+        }
     }
 
     @GetMapping

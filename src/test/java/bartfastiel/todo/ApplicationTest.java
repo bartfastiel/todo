@@ -26,7 +26,7 @@ public class ApplicationTest {
 
     @DirtiesContext
     @Test
-    public void expectNewLocation_whenSendingTodoItem() throws Exception {
+    public void expectStatusCreatedAndNewLocation_whenPostingTodoItem() throws Exception {
         mvc.perform(post("/todos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -37,6 +37,21 @@ public class ApplicationTest {
                                 """))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(HttpHeaders.LOCATION, matchesRegex("http://localhost/todos/" + UUID_PATTERN)));
+    }
+
+    @DirtiesContext
+    @Test
+    public void expectStatusCreatedAndNewLocation_whenPuttingTodoItem() throws Exception {
+        mvc.perform(put("/todos/02e613f6-bbc9-4a59-ad7a-89f41904cc2c")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "title": "some title",
+                                    "status": "open"
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andExpect(header().string(HttpHeaders.LOCATION, matchesRegex("http://localhost/todos/02e613f6-bbc9-4a59-ad7a-89f41904cc2c")));
     }
 
     @Test
@@ -67,7 +82,7 @@ public class ApplicationTest {
 
     @DirtiesContext
     @Test
-    public void expectSingleItemResponse_whenStoringItemThenQuerying() throws Exception {
+    public void expectSingleItemResponse_whenPostingItemThenQuerying() throws Exception {
         mvc.perform(post("/todos")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -85,6 +100,32 @@ public class ApplicationTest {
                             {
                                     "title": "some title",
                                     "status": "open"
+                            }
+                        ]
+                        """));
+    }
+
+    @DirtiesContext
+    @Test
+    public void expectSingleItemResponse_whenPuttingItemThenQuerying() throws Exception {
+        mvc.perform(put("/todos/02e613f6-bbc9-4a59-ad7a-89f41904cc2c")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "title": "some title",
+                            "status": "open"
+                        }
+                        """));
+
+        mvc.perform(get("/todos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(content().json("""
+                        [
+                            {
+                                "key": "02e613f6-bbc9-4a59-ad7a-89f41904cc2c",
+                                "title": "some title",
+                                "status": "open"
                             }
                         ]
                         """));
