@@ -2,16 +2,33 @@
 
 Minimalistic todo API with MongoDB data storage
 
-## Usage
+See it in action at: http://bartfastiel-todo.schwarz-consulting.de/
 
-Start the application with the following settings to connect to a remote mongo database
+## Build it
 
+Prerequisites: `Maven`
+
+```shell
+mvn clean package
 ```
--Dspring.data.mongodb.uri=mongodb+srv://<user>:<pwd>@<mongoserver>/<database> \
--Dspring.data.mongodb.database=<database>
+
+## Run it
+
+Prerequisites: `Java JDK 17`, `MongoDB`
+
+```shell
+java -Dserver.port=<port> \
+     -Dspring.data.mongodb.uri=<mongodb uri> \
+     -Dspring.data.mongodb.database=<database name> \
+     -jar app.jar
 ```
 
-Or store the settings in `src/main/resources/application-secret.properties` for local testing.
+Replace `<port>` with the local port that the app will be listening to.
+
+Replace `spring.data.mongodb.uri` with a mongo db url (i.e. in the
+format `mongodb+srv://<user>:<pwd>@<mongoserver>/<database>`)
+
+Replace `spring.data.mongodb.database` with a database name, i.e. `todo`
 
 ## Clean code
 
