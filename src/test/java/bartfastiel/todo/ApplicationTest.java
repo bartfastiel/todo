@@ -4,11 +4,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.matchesRegex;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -17,12 +19,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class ApplicationTest {
 
+    private static final String UUID_PATTERN = "\\b[0-9a-f]{8}\\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\\b[0-9a-f]{12}\\b";
+
     @Autowired
     private MockMvc mvc;
 
     @DirtiesContext
     @Test
-    public void expectStatusCreated_whenSendingTodoItem() throws Exception {
+    public void expectNewLocation_whenSendingTodoItem() throws Exception {
         mvc.perform(post("/todos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -31,10 +35,24 @@ public class ApplicationTest {
                                     "status": "open"
                                 }
                                 """))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string(HttpHeaders.LOCATION, matchesRegex("http://localhost/todos/" + UUID_PATTERN)));
     }
 
-    @DirtiesContext
+    @Test
+    public void expectStatusBadRequest_whenProvidingKeyOnInsert() throws Exception {
+        mvc.perform(post("/todos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "key": "MY_OWN_KEY",
+                                    "title": "some title",
+                                    "status": "open"
+                                }
+                                """))
+                .andExpect(status().isBadRequest());
+    }
+
     @Test
     public void expectStatusBadRequest_whenSendingInvalidStatus() throws Exception {
         mvc.perform(post("/todos")
