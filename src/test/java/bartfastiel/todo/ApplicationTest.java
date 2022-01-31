@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ApplicationTest {
+class ApplicationTest {
 
     private static final String UUID_PATTERN = "\\b[0-9a-f]{8}\\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\\b[0-9a-f]{12}\\b";
 
@@ -26,7 +26,7 @@ public class ApplicationTest {
 
     @DirtiesContext
     @Test
-    public void expectStatusCreatedAndNewLocation_whenPostingTodoItem() throws Exception {
+    void expectStatusCreatedAndNewLocation_whenPostingTodoItem() throws Exception {
         mvc.perform(post("/todos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -41,7 +41,7 @@ public class ApplicationTest {
 
     @DirtiesContext
     @Test
-    public void expectStatusCreatedAndNewLocation_whenPuttingTodoItem() throws Exception {
+    void expectStatusCreatedAndNewLocation_whenPuttingTodoItem() throws Exception {
         mvc.perform(put("/todos/02e613f6-bbc9-4a59-ad7a-89f41904cc2c")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -55,7 +55,7 @@ public class ApplicationTest {
     }
 
     @Test
-    public void expectStatusBadRequest_whenProvidingKeyOnInsert() throws Exception {
+    void expectStatusBadRequest_whenProvidingKeyOnInsert() throws Exception {
         mvc.perform(post("/todos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -69,7 +69,7 @@ public class ApplicationTest {
     }
 
     @Test
-    public void expectStatusBadRequest_whenSendingInvalidStatus() throws Exception {
+    void expectStatusBadRequest_whenSendingInvalidStatus() throws Exception {
         mvc.perform(post("/todos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -82,7 +82,7 @@ public class ApplicationTest {
 
     @DirtiesContext
     @Test
-    public void expectSingleItemResponse_whenPostingItemThenQuerying() throws Exception {
+    void expectSingleItemResponse_whenPostingItemThenQuerying() throws Exception {
         mvc.perform(post("/todos")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -107,7 +107,7 @@ public class ApplicationTest {
 
     @DirtiesContext
     @Test
-    public void expectSingleItemResponse_whenPuttingItemThenQuerying() throws Exception {
+    void expectSingleItemResponse_whenPuttingItemThenQuerying() throws Exception {
         mvc.perform(put("/todos/02e613f6-bbc9-4a59-ad7a-89f41904cc2c")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -133,7 +133,7 @@ public class ApplicationTest {
 
     @DirtiesContext
     @Test
-    public void expectUpdatedResponse_whenInsertingThenUpdatingItem() throws Exception {
+    void expectUpdatedResponse_whenInsertingThenUpdatingItem() throws Exception {
         var location = mvc.perform(post("/todos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -171,14 +171,14 @@ public class ApplicationTest {
     }
 
     @Test
-    public void expectRedirectToSwaggerUi_whenOpeningRootUrl() throws Exception {
+    void expectRedirectToSwaggerUi_whenOpeningRootUrl() throws Exception {
         mvc.perform(get("/"))
                 .andExpect(redirectedUrl("/swagger-ui/index.html"));
 
     }
 
     @Test
-    public void expectSwaggerUi_whenDirectlyNavigatingToIt() throws Exception {
+    void expectSwaggerUi_whenDirectlyNavigatingToIt() throws Exception {
         mvc.perform(get("/swagger-ui/index.html"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Swagger UI")));
