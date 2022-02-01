@@ -32,9 +32,11 @@ Replace `spring.data.mongodb.database` with a database name, i.e. `todo`
 
 ## Clean code
 
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=bartfastiel_todo&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=bartfastiel_todo)
+
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=bartfastiel_todo&metric=coverage)](https://sonarcloud.io/summary/new_code?id=bartfastiel_todo)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=bartfastiel_todo&metric=bugs)](https://sonarcloud.io/summary/new_code?id=bartfastiel_todo)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=bartfastiel_todo&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=bartfastiel_todo)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=bartfastiel_todo&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=bartfastiel_todo)
 
 ![build](https://github.com/bartfastiel/todo/actions/workflows/maven.yml/badge.svg)
 
