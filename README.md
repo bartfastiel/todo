@@ -2,7 +2,9 @@
 
 Minimalistic todo API with MongoDB data storage
 
-See it in action at: http://bartfastiel-todo.schwarz-consulting.de/
+Docker images available at: https://hub.docker.com/repository/docker/bartfastiel/todo
+
+See it in action at: https://bartfastiel-todo.azurewebsites.net
 
 ## Build it
 
